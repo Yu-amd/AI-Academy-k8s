@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vllm-inference
+  namespace: default
+  labels:
+    app: vllm-inference
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vllm-inference
+  template:
+    metadata:
+      labels:
+        app: vllm-inference
+    spec:
+      containers:
+      - name: vllm-container
+        image: rocm/vllm:latest
+        ports:
+        - containerPort: 8000
+          name: http
+        env:
+        - name: HUGGING_FACE_HUB_TOKEN
+          value: ""  # Add your HF token if needed for gated models
+        command:
+        - "python"
+        - "-m"
+        - "vllm.entrypoints.openai.api_server"
+        args:
+        - "--model"
+        - "microsoft/Llama-3.2-1B-Instruct"  # Small model for demo
+        - "--host"
+        - "0.0.0.0"
+        - "--port"
+        - "8000"
+        - "--download-dir"
+        - "/models"
+        - "--tensor-parallel-size"
+        - "1"
+        volumeMounts:
+        - name: model-storage
+          mountPath: /models
+        resources:
+          requests:
+            amd.com/gpu: 1
+            memory: "8Gi"
+            cpu: "2"
+          limits:
+            amd.com/gpu: 1
+            memory: "16Gi"
+            cpu: "4"
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 60
+          periodSeconds: 30
+      volumes:
+      - name: model-storage
+        persistentVolumeClaim:
+          claimName: llama-3.2-1b
+      tolerations:
+      - key: nvidia.com/gpu
+        operator: Exists
+        effect: NoSchedule
+      - key: amd.com/gpu
+        operator: Exists
+        effect: NoSchedule

@@ -1,0 +1,31 @@
+# Persistent Volume for AI model storage (vanilla Kubernetes)
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: llama-3.2-1b-pv
+  namespace: default
+spec:
+  capacity:
+    storage: 50Gi
+  accessModes:
+  - ReadWriteOnce
+  hostPath:
+    path: /mnt/data/llama
+  volumeMode: Filesystem
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage
+---
+# Persistent Volume Claim for AI model storage
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: llama-3.2-1b
+  namespace: default
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 50Gi
+  volumeMode: Filesystem
+  storageClassName: local-storage

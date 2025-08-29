@@ -1,0 +1,23 @@
+# Simple test pod to verify GPU functionality
+apiVersion: v1
+kind: Pod
+metadata:
+  name: gpu-test-pod
+  namespace: default
+spec:
+  containers:
+  - name: gpu-container
+    image: rocm/pytorch:latest
+    command: ["sleep", "3600"]  # Keep pod running for testing
+    resources:
+      limits:
+        amd.com/gpu: 1
+      requests:
+        amd.com/gpu: 1
+        memory: "4Gi"
+        cpu: "1"
+  restartPolicy: Never
+  tolerations:
+  - key: amd.com/gpu
+    operator: Exists
+    effect: NoSchedule

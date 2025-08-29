@@ -1,0 +1,37 @@
+apiVersion: amd.com/v1alpha1
+kind: DeviceConfig
+metadata:
+  name: gpu-operator
+  # use the namespace where AMD GPU Operator is running
+  namespace: kube-amd-gpu
+spec:
+  driver:
+    # disable the installation of out-of-tree amdgpu kernel module
+    # assuming drivers are already installed on the host
+    enable: false
+
+  devicePlugin:
+    # Specify the device plugin image
+    devicePluginImage: rocm/k8s-device-plugin:latest
+    
+    # Specify the node labeller image
+    nodeLabellerImage: rocm/k8s-device-plugin:labeller-latest
+    
+    # Enable node labeller for proper GPU detection
+    enableNodeLabeller: true
+        
+  metricsExporter:
+    # Enable metrics exporter for monitoring
+    enable: true
+    # Use NodePort for external access to metrics
+    serviceType: "NodePort"
+    # Internal service port for metrics collection
+    port: 5000
+    # Node port for external access
+    nodePort: 32500
+    # Metrics exporter image
+    image: "docker.io/rocm/device-metrics-exporter:v1.0.0"
+
+  # Target nodes with AMD GPUs
+  selector:
+    feature.node.kubernetes.io/amd-gpu: "true"
