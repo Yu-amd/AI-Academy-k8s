@@ -2,7 +2,7 @@
 
 This repository contains a comprehensive tutorial for deploying and managing AI inference workloads on Kubernetes clusters with AMD GPUs, based on the [ROCm blog series](https://rocm.blogs.amd.com/artificial-intelligence/k8s-orchestration-part1/README.html).
 
-## 📁 Repository Structure
+## Repository Structure
 
 ```
 ├── README.md                           # This file
@@ -19,11 +19,11 @@ This repository contains a comprehensive tutorial for deploying and managing AI 
     └── gpu-test-pod.yaml               # Simple GPU test pod
 ```
 
-## 🎯 Target Audience
+## Target Audience
 
 Infrastructure administrators and DevOps teams exploring AMD GPUs for production Kubernetes workloads.
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 
@@ -73,7 +73,7 @@ The notebook provides interactive sections for:
 - Scaling demonstrations
 - Troubleshooting exercises
 
-## 📋 Tutorial Outline
+## Tutorial Outline
 
 The complete tutorial follows this structure (suitable for 15-minute presentation):
 
@@ -85,7 +85,7 @@ The complete tutorial follows this structure (suitable for 15-minute presentatio
 6. **Key Takeaways** - Production considerations
 7. **Next Steps** - Advanced topics and resources
 
-## 🔧 Manual Configuration
+## Manual Configuration
 
 If you prefer manual deployment, use the YAML files in `yaml-configs/`:
 
@@ -103,40 +103,40 @@ kubectl apply -f yaml-configs/metallb-config.yaml
 kubectl apply -f yaml-configs/gpu-test-pod.yaml
 ```
 
-## 🏗️ Architecture Overview
+## Architecture Overview
 
 ```
 ┌─────────────────────────────────────────────┐
 │                Applications                 │
-│  ┌─────────────┐  ┌─────────────┐         │
-│  │    vLLM     │  │  Jupyter    │   ...   │
-│  │  Inference  │  │ Notebooks   │         │
-│  └─────────────┘  └─────────────┘         │
+│  ┌─────────────┐  ┌─────────────┐           │
+│  │    vLLM     │  │  Jupyter    │   ...     │
+│  │  Inference  │  │ Notebooks   │           │
+│  └─────────────┘  └─────────────┘           │
 └─────────────────────────────────────────────┘
 ┌─────────────────────────────────────────────┐
 │            Kubernetes Layer                 │
-│  ┌──────────┐ ┌──────────┐ ┌──────────┐   │
-│  │   Pods   │ │ Services │ │Deployments│   │
-│  └──────────┘ └──────────┘ └──────────┘   │
+│  ┌──────────┐ ┌──────────┐ ┌───────────┐    │
+│  │   Pods   │ │ Services │ │Deployments│    │
+│  └──────────┘ └──────────┘ └───────────┘    │
 └─────────────────────────────────────────────┘
 ┌─────────────────────────────────────────────┐
 │           AMD GPU Operator                  │
-│  ┌──────────────┐  ┌─────────────────┐     │
-│  │Device Plugin │  │  Node Labeller  │     │
-│  └──────────────┘  └─────────────────┘     │
+│  ┌──────────────┐  ┌─────────────────┐      │
+│  │Device Plugin │  │  Node Labeller  │      │
+│  └──────────────┘  └─────────────────┘      │
 └─────────────────────────────────────────────┘
 ┌─────────────────────────────────────────────┐
 │         Hardware Infrastructure             │
-│  ┌─────────────────────────────────────┐   │
-│  │     AMD Instinct MI300X GPUs        │   │
-│  │  ┌─────┐ ┌─────┐ ┌─────┐ ┌─────┐   │   │
-│  │  │GPU 0│ │GPU 1│ │GPU 2│ │GPU 3│   │   │
-│  │  └─────┘ └─────┘ └─────┘ └─────┘   │   │
-│  └─────────────────────────────────────┘   │
+│  ┌─────────────────────────────────────┐    │
+│  │     AMD Instinct MI300X GPUs        │    │
+│  │  ┌─────┐ ┌─────┐ ┌─────┐ ┌─────┐    │    │
+│  │  │GPU 0│ │GPU 1│ │GPU 2│ │GPU 3│    │    │
+│  │  └─────┘ └─────┘ └─────┘ └─────┘    │    │
+│  └─────────────────────────────────────┘    │
 └─────────────────────────────────────────────┘
 ```
 
-## 🔍 Verification Commands
+## Verification Commands
 
 After installation, verify your setup:
 
@@ -159,7 +159,7 @@ kubectl apply -f yaml-configs/gpu-test-pod.yaml
 kubectl exec gpu-test-pod -- rocm-smi
 ```
 
-## 🧪 Testing the AI API
+## Testing the AI API
 
 Once deployed, test the vLLM API:
 
@@ -181,7 +181,7 @@ curl -X POST http://$EXTERNAL_IP/v1/completions \
   }'
 ```
 
-## 📊 Monitoring and Scaling
+## Monitoring and Scaling
 
 ### GPU Metrics
 
@@ -229,13 +229,13 @@ kubectl get pods -l app=vllm-inference
 - `kubectl top nodes` - Node resource usage
 - `kubectl top pods` - Pod resource usage
 
-## 🎓 Key Takeaways
+## Key Takeaways
 
 1. **Production-Ready Integration**: AMD GPU Operator seamlessly integrates MI300X GPUs with standard Kubernetes
 2. **Vanilla Kubernetes Compatible**: No specialized distributions needed - works with standard K8s + Helm
 3. **Enterprise Features**: Native scaling, load balancing, and monitoring with cloud-native patterns
 
-## 📚 Additional Resources
+## Additional Resources
 
 - **[AMD GPU Operator Documentation](https://rocm.github.io/gpu-operator/)** - Complete configuration reference
 - **[ROCm Software Platform](https://rocm.docs.amd.com/)** - AMD's open-source GPU computing stack  
@@ -243,16 +243,16 @@ kubectl get pods -l app=vllm-inference
 - **[Kubernetes GPU Documentation](https://kubernetes.io/docs/tasks/manage-gpus/scheduling-gpus/)** - Official GPU scheduling guide
 - **[Original ROCm Blog Series](https://rocm.blogs.amd.com/artificial-intelligence/k8s-orchestration-part1/README.html)** - Source material for this tutorial
 
-## 🆘 Getting Help
+## Getting Help
 
 - **AMD Developer Community**: [community.amd.com](https://community.amd.com)
 - **ROCm GitHub Issues**: [github.com/ROCm/ROCm](https://github.com/ROCm/ROCm)
 - **Kubernetes Slack**: #sig-node-gpu channel
 
-## 📄 License
+## License
 
 This tutorial is based on AMD ROCm blog posts and follows open-source best practices. Please refer to individual component licenses for specific terms.
 
 ---
 
-**Ready to accelerate your AI workloads with AMD GPUs on Kubernetes?** Start with `./install-amd-gpu-operator.sh` and follow the guide! 🚀
+**Ready to accelerate your AI workloads with AMD GPUs on Kubernetes?** Start with `./install-amd-gpu-operator.sh` and follow the guide!

@@ -54,31 +54,31 @@ Organizations today face a critical challenge: **How do you scale AI inference w
 ```
 ┌─────────────────────────────────────────────┐
 │                Applications                 │
-│  ┌─────────────┐  ┌─────────────┐         │
-│  │    vLLM     │  │  Jupyter    │   ...   │
-│  │  Inference  │  │ Notebooks   │         │
-│  └─────────────┘  └─────────────┘         │
+│  ┌─────────────┐  ┌─────────────┐           │
+│  │    vLLM     │  │  Jupyter    │   ...     │
+│  │  Inference  │  │ Notebooks   │           │
+│  └─────────────┘  └─────────────┘           │
 └─────────────────────────────────────────────┘
 ┌─────────────────────────────────────────────┐
 │            Kubernetes Layer                 │
-│  ┌──────────┐ ┌──────────┐ ┌──────────┐   │
-│  │   Pods   │ │ Services │ │Deployments│   │
-│  └──────────┘ └──────────┘ └──────────┘   │
+│  ┌──────────┐ ┌──────────┐ ┌───────────┐    │
+│  │   Pods   │ │ Services │ │Deployments│    │
+│  └──────────┘ └──────────┘ └───────────┘    │
 └─────────────────────────────────────────────┘
 ┌─────────────────────────────────────────────┐
 │           AMD GPU Operator                  │
-│  ┌──────────────┐  ┌─────────────────┐     │
-│  │Device Plugin │  │  Node Labeller  │     │
-│  └──────────────┘  └─────────────────┘     │
+│  ┌──────────────┐  ┌─────────────────┐      │
+│  │Device Plugin │  │  Node Labeller  │      │
+│  └──────────────┘  └─────────────────┘      │
 └─────────────────────────────────────────────┘
 ┌─────────────────────────────────────────────┐
 │         Hardware Infrastructure             │
-│  ┌─────────────────────────────────────┐   │
-│  │     AMD Instinct MI300X GPUs        │   │
-│  │  ┌─────┐ ┌─────┐ ┌─────┐ ┌─────┐   │   │
-│  │  │GPU 0│ │GPU 1│ │GPU 2│ │GPU 3│   │   │
-│  │  └─────┘ └─────┘ └─────┘ └─────┘   │   │
-│  └─────────────────────────────────────┘   │
+│  ┌─────────────────────────────────────┐    │
+│  │     AMD Instinct MI300X GPUs        │    │
+│  │  ┌─────┐ ┌─────┐ ┌─────┐ ┌─────┐    │    │
+│  │  │GPU 0│ │GPU 1│ │GPU 2│ │GPU 3│    │    │
+│  │  └─────┘ └─────┘ └─────┘ └─────┘    │    │
+│  └─────────────────────────────────────┘    │
 └─────────────────────────────────────────────┘
 ```
 
@@ -158,14 +158,10 @@ lspci | grep -i amd
 ### Documentation and Community Resources
 - **[AMD GPU Operator Documentation](https://rocm.github.io/gpu-operator/)** - Complete configuration reference
 - **[ROCm Software Platform](https://rocm.docs.amd.com/)** - AMD's open-source GPU computing stack
-- **[vLLM Documentation](https://docs.vllm.ai/)** - High-performance LLM inference engine
-- **[Kubernetes GPU Documentation](https://kubernetes.io/docs/tasks/manage-gpus/scheduling-gpus/)** - Official Kubernetes GPU scheduling guide
-- **[ROCm Blog Series](https://rocm.blogs.amd.com/artificial-intelligence/k8s-orchestration-part1/README.html)** - Original three-part series this tutorial is based on
 
 ### Getting Help
 - **AMD Developer Community**: [community.amd.com](https://community.amd.com)
 - **ROCm GitHub Issues**: [github.com/ROCm/ROCm](https://github.com/ROCm/ROCm)
-- **Kubernetes Slack**: #sig-node-gpu channel
 
 ---
 
