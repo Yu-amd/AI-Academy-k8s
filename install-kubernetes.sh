@@ -112,39 +112,29 @@ disable_swap() {
 }
 
 # Function to configure kernel modules and sysctl settings
-
+configure_kernel() {
     log_info "Configuring kernel modules and sysctl settings..."
     
-    # Load required kernel modules with error handling
+    # Load required kernel modules
     cat > /etc/modules-load.d/k8s.conf << MODULES_EOF
 overlay
 br_netfilter
 MODULES_EOF
 
-    # Try to load overlay module with fallback options
-    log_info "Loading overlay filesystem module..."
-    if modprobe overlay 2>/dev/null; then
-        log_success "overlay module loaded successfully."
-    elif modprobe overlayfs 2>/dev/null; then
-        log_success "overlayfs module loaded successfully."
-    elif lsmod | grep -q "overlay\|overlayfs"; then
-        log_success "Overlay filesystem already loaded."
-    else
-        log_warning "Overlay filesystem not available in kernel modules."
-        log_info "This may be normal on cloud instances - overlay support might be built-in."
-        log_info "Continuing installation - containerd will handle overlay requirements."
+    if ! modprobe overlay 2>/dev/null; then
+        if ! modprobe overlayfs 2>/dev/null; then
+            if ! lsmod | grep -q "overlay\|overlayfs"; then
+                log_warning "Overlay filesystem not available - continuing anyway"
+            fi
+        fi
     fi
-    
-    # Try to load br_netfilter module
-    log_info "Loading br_netfilter module..."
-    if modprobe br_netfilter 2>/dev/null; then
-        log_success "br_netfilter module loaded successfully."
-    elif lsmod | grep -q br_netfilter; then
-        log_success "br_netfilter already loaded."
-    else
-        log_warning "br_netfilter not available. Network filtering may be limited."
-        log_info "This may be normal on some cloud instances. Continuing installation."
+    # Original: modprobe overlay
+    if ! modprobe br_netfilter 2>/dev/null; then
+        if ! lsmod | grep -q br_netfilter; then
+            log_warning "br_netfilter not available - continuing anyway"
+        fi
     fi
+    # Original: modprobe br_netfilter
     
     # Configure sysctl settings for Kubernetes
     cat > /etc/sysctl.d/k8s.conf << SYSCTL_EOF
@@ -154,16 +144,26 @@ net.ipv4.ip_forward                 = 1
 SYSCTL_EOF
 
     # Apply sysctl settings
-    sysctl --system
+    if ! sysctl --system 2>/dev/null; then
+        log_warning "Some sysctl settings could not be applied (read-only filesystem)"
+        log_info "This is normal in container environments - continuing installation"
+        # Try to apply just the k8s specific settings
+        sysctl -p /etc/sysctl.d/k8s.conf 2>/dev/null || true
+    fi
     
     log_success "Kernel configuration completed."
-
+}
 
 # Function to install container runtime (containerd)
 install_containerd() {
     log_info "Installing containerd container runtime..."
     
     # Update package index
+    # Wait for any running package managers to finish
+    log_info "Waiting for package manager to be available..."
+    while fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; do
+        sleep 2
+    done
     apt-get update
     
     # Install required packages
